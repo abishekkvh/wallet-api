@@ -4,12 +4,19 @@ import postgres from "postgres";
 import rateLimiter from "./middleware/rateLimiter.js"; 
 import transactionsRoute from "./routes/transactionsRoute.js";
 import { initDb } from "./config/db.js";
+import job from "./config/cron.js";
 
 //Initialize .env file
 dotenv.config();
 
+if(proces.env.NODE_ENV ==="production") job.start(); // Make the Server alive every 14 minutes
+
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+app.get("/api", (req,res) => {
+  res.status(200).json({status: "ok"})
+});
 
 // Middleware
 app.use(rateLimiter);
